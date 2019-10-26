@@ -1,0 +1,115 @@
+﻿<phone:PhoneApplicationPage x:Class="PedroLamas.TheBroCode.View.MainPage"
+                            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                            xmlns:cimbalinoBehaviors="clr-namespace:Cimbalino.Phone.Toolkit.Behaviors;assembly=Cimbalino.Phone.Toolkit"
+                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                            xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+                            xmlns:inneractive="clr-namespace:Inneractive.Nokia.Ad;assembly=Inneractive.Ad"
+                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                            xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+                            xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+                            xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+                            DataContext="{Binding Main,
+                                                  Source={StaticResource Locator}}"
+                            FontFamily="{StaticResource PhoneFontFamilyNormal}"
+                            FontSize="{StaticResource PhoneFontSizeNormal}"
+                            Foreground="{StaticResource ForegroundBrush}"
+                            Orientation="Portrait"
+                            Style="{StaticResource PhoneApplicationPageStyle}"
+                            SupportedOrientations="PortraitOrLandscape"
+                            shell:SystemTray.IsVisible="True"
+                            shell:SystemTray.Opacity="0"
+                            mc:Ignorable="d">
+
+    <i:Interaction.Behaviors>
+        <cimbalinoBehaviors:ApplicationBarBehavior BackgroundColor="{StaticResource BackgroundColor}" ForegroundColor="{StaticResource ForegroundColor}">
+            <cimbalinoBehaviors:ApplicationBarIconButton Command="{Binding PreviousQuoteCommand,
+                                                                           Mode=OneTime}"
+                                                         IconUri="/Assets/AppBar/previous.png"
+                                                         Text="previous" />
+            <cimbalinoBehaviors:ApplicationBarIconButton Click="IndexApplicationBarMenuItem_OnClick"
+                                                         IconUri="/Assets/AppBar/tabs.png"
+                                                         Text="index" />
+            <cimbalinoBehaviors:ApplicationBarIconButton Command="{Binding NextQuoteCommand,
+                                                                           Mode=OneTime}"
+                                                         IconUri="/Assets/AppBar/next.png"
+                                                         Text="next" />
+            <cimbalinoBehaviors:ApplicationBarBehavior.MenuItems>
+                <cimbalinoBehaviors:ApplicationBarMenuItem Click="ShareApplicationBarIconButton_OnClick" Text="share" />
+                <cimbalinoBehaviors:ApplicationBarMenuItem Command="{Binding RandomQuoteCommand, Mode=OneTime}" Text="random article" />
+                <cimbalinoBehaviors:ApplicationBarMenuItem Command="{Binding TodaysQuoteCommand, Mode=OneTime}" Text="today's article" />
+                <cimbalinoBehaviors:ApplicationBarMenuItem Command="{Binding ShowAboutCommand, Mode=OneTime}" Text="about" />
+            </cimbalinoBehaviors:ApplicationBarBehavior.MenuItems>
+        </cimbalinoBehaviors:ApplicationBarBehavior>
+    </i:Interaction.Behaviors>
+
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="12,49,0,28">
+            <TextBlock Style="{StaticResource TextNormalStyle}" Text="{StaticResource ApplicationTitle}" />
+        </StackPanel>
+
+        <Grid x:Name="ContentPanel"
+              Grid.Row="1"
+              Margin="12,0,12,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="4*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock VerticalAlignment="Center"
+                       Style="{StaticResource TextExtraLargeStyle}"
+                       Text="{Binding Title}"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap" />
+
+            <ScrollViewer Grid.Row="1">
+                <TextBlock Margin="{StaticResource PhoneTouchTargetLargeOverhang}"
+                           Style="{StaticResource TextLargeStyle}"
+                           Text="{Binding Description}"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap" />
+            </ScrollViewer>
+
+            <toolkit:ListPicker x:Name="QuotesListPicker"
+                                FullModeHeader="ARTICLES"
+                                ItemsSource="{Binding Quotes}"
+                                SelectedIndex="{Binding SelectedIndex,
+                                                        Mode=TwoWay}"
+                                Visibility="Collapsed">
+                <toolkit:ListPicker.FullModeItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Margin="{StaticResource PhoneMargin}"
+                                   FontSize="{StaticResource PhoneFontSizeLarge}"
+                                   Text="{Binding Title}" />
+                    </DataTemplate>
+                </toolkit:ListPicker.FullModeItemTemplate>
+            </toolkit:ListPicker>
+            <toolkit:ListPicker x:Name="ShareTypeListPicker"
+                                ExpansionMode="FullScreenOnly"
+                                Header="SHARE"
+                                SelectionChanged="ShareTypeListPicker_OnSelectionChanged"
+                                Visibility="Collapsed">
+                <toolkit:ListPicker.FullModeItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Margin="0,18"
+                                   FontSize="{StaticResource PhoneFontSizeLarge}"
+                                   Text="{Binding}"
+                                   Visibility="{Binding Converter={StaticResource StringToVisibilityConverter}}" />
+                    </DataTemplate>
+                </toolkit:ListPicker.FullModeItemTemplate>
+            </toolkit:ListPicker>
+        </Grid>
+
+        <inneractive:InneractiveAd Grid.Row="2"
+                                   Width="480"
+                                   MaxHeight="80"
+                                   AdType="IaAdType_Banner"
+                                   AppID="PedroLamas_TheBroCode_WP" />
+    </Grid>
+</phone:PhoneApplicationPage>
